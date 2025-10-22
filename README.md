@@ -113,6 +113,30 @@ Transcribe or translate audio into text
 | is_async | Run task in background and sends results to webhook URL. `true`, `false` default: `false` |
 | managed_task_id | Custom Task ID used to reference ongoing task. default: `uuid() v4 will be generated for each transcription task` |
 
+
+#### OpenAI-Compatible Endpoints (for Open WebUI)
+
+#### **POST** `/v1/audio/transcriptions`
+Transcribe audio into text in OpenAI-compatible format for use with Open WebUI
+
+##### Form parameters:
+- `file`: (Required) Audio file to transcribe
+- `model`: (Required) Model to use (typically "whisper-1")
+- `language`: (Optional) Language of the audio
+- `prompt`: (Optional) An optional text to guide the model's style
+- `response_format`: (Optional) Response format: `json` (default), `text`, `srt`, `vtt`, `verbose_json`
+- `temperature`: (Optional) Temperature for sampling (default: 0.0)
+
+#### **POST** `/v1/audio/translations`
+Translate audio into English in OpenAI-compatible format for use with Open WebUI
+
+##### Form parameters:
+- `file`: (Required) Audio file to translate
+- `model`: (Required) Model to use (typically "whisper-1") 
+- `prompt`: (Optional) An optional text to guide the model's style
+- `response_format`: (Optional) Response format: `json` (default), `text`, `srt`, `vtt`, `verbose_json`
+- `temperature`: (Optional) Temperature for sampling (default: 0.0)
+
 #### **GET** `/tasks`
 Get all active transcription tasks, both async background tasks and ongoing tasks
 
@@ -123,7 +147,7 @@ Get the status of a task, completed tasks will be removed from the list which ma
 Cancel async background task. Only transcription jobs created with `is_async` set to `true` can be cancelled.
 
 
-## Running locally
+## Running locally with pip/venv
 ```bash
 # clone the repo
 $ git clone https://github.com/jigsawstack/insanely-fast-whisper-api.git
@@ -148,6 +172,17 @@ $ which python3
 
 # setup virtual environment 
 $ poetry env use /full/path/to/python
+```
+
+## Running locally with Conda (Recommended for GPU)
+
+For easier GPU setup and dependency management, we recommend using Conda. See [README-Conda.md](README-Conda.md) for detailed instructions on installing and running the API with Conda.
+
+A quick installation script is also available:
+```bash
+# Run the automated installation script
+./install_conda.sh
+```
 
 # install the requirements
 $ poetry install
