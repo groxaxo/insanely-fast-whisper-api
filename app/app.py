@@ -365,7 +365,7 @@ def translate_audio(
 
 
 @app.post("/v1/audio/translations")
-def translate_audio(
+def translate_audio_openai(
     file: UploadFile = File(...),
     model: str = Form(...),
     prompt: Optional[str] = Form(None),
@@ -375,10 +375,10 @@ def translate_audio(
     """
     OpenAI-compatible translation endpoint for Open WebUI
     """
-    # Save uploaded file temporarily
     import tempfile
     import os
     
+    # Save the uploaded file temporarily
     with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp_file:
         tmp_file.write(file.file.read())
         temp_file_path = tmp_file.name
@@ -396,7 +396,7 @@ def translate_audio(
         
         # Format response based on response_format parameter
         if response_format == "text":
-            return outputs["text"]
+            return outputs.get("text", "")
         elif response_format in ["srt", "vtt"]:
             # For SRT/VTT formats, we need to convert the output accordingly
             # For now, return JSON format as fallback
