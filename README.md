@@ -1,4 +1,298 @@
-# Insanely Fast Whisper API
+# Insanely Fast Whisper API - Production Ready
+
+[![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%203090-green)](https://www.nvidia.com/)
+[![Model](https://img.shields.io/badge/Model-Whisper%20Large%20V3%20Turbo-blue)](https://huggingface.co/openai/whisper-large-v3-turbo)
+[![Memory](https://img.shields.io/badge/Memory-15%25%20GPU-orange)](https://github.com/groxaxo/insanely-fast-whisper-api)
+
+OpenAI-compatible Whisper API optimized for GPU 2 with 15% memory limit. Features auto language detection, Flash Attention 2.0, and seamless Open WebUI integration.
+
+## ✨ Features
+
+- 🚀 **Whisper Large V3 Turbo** - 2x faster than regular v3, same accuracy
+- 🌍 **Auto Language Detection** - 99+ languages supported
+- ⚡ **Flash Attention 2.0** - Optimized GPU inference
+- 🎯 **OpenAI Compatible** - Drop-in replacement for OpenAI Whisper API
+- 💾 **Memory Efficient** - Limited to 15% of GPU 2 (3.53 GB)
+- 🔄 **Auto-restart** - Systemd service with automatic recovery
+- 📊 **Production Tested** - Verified with Spanish and English audio
+
+## 🚀 Quick Start
+
+### 1. Clone and Setup
+
+```bash
+git clone https://github.com/groxaxo/insanely-fast-whisper-api.git
+cd insanely-fast-whisper-api
+
+# Create conda environment
+conda create -n whisper-api python=3.10 -y
+conda activate whisper-api
+
+# Install PyTorch with CUDA
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Install Flash Attention
+pip install wheel ninja packaging
+pip install flash-attn==2.5.6 --no-build-isolation
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 2. Start the API
+
+```bash
+./start_gpu2_limited.sh
+```
+
+The API will be available at `http://localhost:8002`
+
+### 3. Install as System Service (Optional)
+
+For automatic startup on boot:
+
+```bash
+./install_service.sh
+```
+
+## 📋 Configuration
+
+### GPU Settings
+- **Device**: GPU 2 (via `CUDA_VISIBLE_DEVICES=2`)
+- **Memory Limit**: 15% (3.53 GB on RTX 3090)
+- **Memory Management**: `expandable_segments:True`
+- **Batch Size**: 8 (optimized for memory efficiency)
+
+### Model Settings
+- **Model**: `openai/whisper-large-v3-turbo`
+- **Size**: 1.62 GB
+- **Precision**: FP16
+- **Optimization**: Flash Attention 2.0
+- **Chunk Length**: 30 seconds
+
+## 🔌 API Usage
+
+### OpenAI-Compatible Endpoint
+
+```bash
+curl -X POST http://localhost:8002/audio/transcriptions \
+  -F "file=@audio.mp3" \
+  -F "model=whisper-large-v3-turbo"
+```
+
+### With Language Specification
+
+```bash
+curl -X POST http://localhost:8002/audio/transcriptions \
+  -F "file=@audio.mp3" \
+  -F "model=whisper-large-v3-turbo" \
+  -F "language=es"
+```
+
+### Response Format
+
+```json
+{
+  "text": "Transcribed text here..."
+}
+```
+
+## 🌐 Open WebUI Integration
+
+### Configuration
+
+Set these environment variables when starting Open WebUI:
+
+```bash
+STT_ENGINE=openai
+STT_OPENAI_API_BASE_URL=http://localhost:8002
+STT_OPENAI_API_KEY=dummy
+STT_MODEL=whisper-large-v3-turbo
+```
+
+### Start Open WebUI
+
+```bash
+pkill -f "open-webui"
+
+STT_ENGINE=openai \
+STT_OPENAI_API_BASE_URL=http://localhost:8002 \
+STT_OPENAI_API_KEY=dummy \
+STT_MODEL=whisper-large-v3-turbo \
+open-webui serve
+```
+
+### Docker Configuration
+
+```yaml
+services:
+  open-webui:
+    environment:
+      - STT_ENGINE=openai
+      - STT_OPENAI_API_BASE_URL=http://host.docker.internal:8002
+      - STT_OPENAI_API_KEY=dummy
+      - STT_MODEL=whisper-large-v3-turbo
+```
+
+## 🧪 Testing
+
+### Run Accuracy Tests
+
+```bash
+python3 test_accuracy.py
+```
+
+### Test Endpoint
+
+```bash
+./test_openwebui_endpoint.sh
+```
+
+### Test Results
+
+- ✅ **Success Rate**: 80% (4/5 files, 1 corrupted)
+- ✅ **Avg Processing Time**: 0.98 seconds
+- ✅ **Languages**: Spanish, English (auto-detected)
+- ✅ **Transcription Quality**: Excellent
+
+See [TEST_RESULTS_SUMMARY.md](TEST_RESULTS_SUMMARY.md) for detailed results.
+
+## 🔧 System Service Management
+
+### Install Service
+
+```bash
+./install_service.sh
+```
+
+### Service Commands
+
+```bash
+# Check status
+sudo systemctl status whisper-api
+
+# Start/Stop/Restart
+sudo systemctl start whisper-api
+sudo systemctl stop whisper-api
+sudo systemctl restart whisper-api
+
+# View logs
+sudo journalctl -u whisper-api -f
+
+# Disable autostart
+sudo systemctl disable whisper-api
+```
+
+## 📊 Performance
+
+| Metric | Value |
+|--------|-------|
+| Model Size | 1.62 GB |
+| GPU Memory | 3.53 GB (15% of RTX 3090) |
+| Avg Processing Time | ~1 second |
+| Processing Speed | 0.57 - 2.95 MB/s |
+| Languages Supported | 99+ |
+| Batch Size | 8 |
+
+## 🗂️ Project Structure
+
+```
+insanely-fast-whisper-api/
+├── app/
+│   ├── app.py                      # Main API (modified with OpenAI endpoint)
+│   ├── diarization_pipeline.py
+│   └── diarize.py
+├── start_gpu2_limited.sh           # Startup script
+├── whisper-api.service             # Systemd service file
+├── install_service.sh              # Service installation script
+├── test_accuracy.py                # Accuracy testing script
+├── test_openwebui_endpoint.sh      # Endpoint testing script
+├── configure_openwebui.sh          # Open WebUI configuration helper
+├── README.md                       # This file
+├── SETUP_SUMMARY.md                # Initial setup guide
+├── OPEN_WEBUI_INTEGRATION.md       # Integration guide
+├── TEST_RESULTS_SUMMARY.md         # Test results
+├── README_COMPLETE.md              # Complete documentation
+├── requirements.txt
+└── pyproject.toml
+```
+
+## 🛠️ Troubleshooting
+
+### API Not Starting
+
+```bash
+# Check if port 8002 is free
+ss -tlnp | grep :8002
+
+# Kill existing process
+pkill -f "uvicorn app.app:app"
+
+# Restart
+./start_gpu2_limited.sh
+```
+
+### Out of Memory Errors
+
+The API is configured for 15% memory usage. If you experience OOM errors:
+
+1. Check GPU memory: `nvidia-smi`
+2. Ensure no other processes are using GPU 2
+3. The Turbo model + 15% limit should work fine
+
+### Transcription Errors
+
+```bash
+# Check API logs
+sudo journalctl -u whisper-api -f
+
+# Or if running manually, check the terminal output
+```
+
+### Open WebUI Connection Issues
+
+1. Verify API is running: `curl http://localhost:8002/`
+2. Check Open WebUI environment variables
+3. If using Docker, use `http://host.docker.internal:8002`
+
+## 📝 Documentation
+
+- [SETUP_SUMMARY.md](SETUP_SUMMARY.md) - Initial setup guide
+- [OPEN_WEBUI_INTEGRATION.md](OPEN_WEBUI_INTEGRATION.md) - Open WebUI integration
+- [TEST_RESULTS_SUMMARY.md](TEST_RESULTS_SUMMARY.md) - Test results and accuracy
+- [README_COMPLETE.md](README_COMPLETE.md) - Complete documentation
+
+## 🤝 Contributing
+
+This is a production-optimized fork with:
+- OpenAI-compatible endpoint for Open WebUI
+- GPU 2 configuration with 15% memory limit
+- Whisper Large V3 Turbo model
+- Systemd service for autostart
+- Comprehensive testing and documentation
+
+## 📄 License
+
+Same as the original [insanely-fast-whisper-api](https://github.com/groxaxo/insanely-fast-whisper-api)
+
+## 🙏 Credits
+
+Based on [insanely-fast-whisper-api](https://github.com/groxaxo/insanely-fast-whisper-api)
+
+## 📞 Support
+
+For issues or questions:
+1. Check the troubleshooting section above
+2. Review the documentation files
+3. Check GPU status: `nvidia-smi`
+4. View logs: `sudo journalctl -u whisper-api -f`
+
+---
+
+**Status**: ✅ Production Ready  
+**Last Updated**: 2025-11-07  
+**Model**: Whisper Large V3 Turbo  
+**GPU**: NVIDIA GeForce RTX 3090 (GPU 2, 15% memory)
 An API to transcribe audio with [OpenAI's Whisper Large v3](https://huggingface.co/openai/whisper-large-v3)! Powered by 🤗 Transformers, Optimum & flash-attn
 
 Features:

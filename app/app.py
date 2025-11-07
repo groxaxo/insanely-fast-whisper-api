@@ -1,4 +1,5 @@
 import os
+import tempfile
 from fastapi import (
     FastAPI,
     Header,
@@ -6,6 +7,9 @@ from fastapi import (
     Body,
     BackgroundTasks,
     Request,
+    File,
+    UploadFile,
+    Form,
 )
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -30,9 +34,19 @@ fly_machine_id = os.environ.get(
     "FLY_MACHINE_ID",
 )
 
+# Configure GPU memory limit (15% utilization)
+if torch.cuda.is_available():
+    # Set memory fraction to 0.15 (15%)
+    torch.cuda.set_per_process_memory_fraction(0.15, device=0)
+    # Enable memory growth to avoid fragmentation
+    torch.cuda.empty_cache()
+    print(f"GPU Memory limited to 15% on device: {torch.cuda.get_device_name(0)}")
+    print(f"Total GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
+    print(f"Allocated limit: {torch.cuda.get_device_properties(0).total_memory * 0.15 / 1024**3:.2f} GB")
+
 pipe = pipeline(
     "automatic-speech-recognition",
-    model="openai/whisper-large-v3",
+    model="openai/whisper-large-v3-turbo",
     torch_dtype=torch.float16,
     device="cuda:0",
     model_kwargs=({"attn_implementation": "flash_attention_2"}),
@@ -231,3 +245,58 @@ def cancel(task_id: str):
         return {"status": "cancelled"}
     else:
         return {"status": "completed", "output": task.result()}
+
+
+# OpenAI-compatible endpoint for Open WebUI
+@app.post("/audio/transcriptions")
+async def transcribe_audio(
+    file: UploadFile = File(...),
+    model: str = Form(default="whisper-large-v3-turbo"),
+    language: str = Form(default=None),
+    response_format: str = Form(default="json"),
+):
+    """
+    OpenAI-compatible transcription endpoint for Open WebUI integration.
+    Accepts audio file upload and returns transcription in OpenAI format.
+    """
+    try:
+        # Save uploaded file to temporary location
+        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
+            content = await file.read()
+            temp_file.write(content)
+            temp_file_path = temp_file.name
+
+        try:
+            # Clear GPU cache before processing
+            torch.cuda.empty_cache()
+            
+            # Process the audio file
+            generate_kwargs = {
+                "task": "transcribe",
+                "language": language if language and language != "None" else None,
+            }
+
+            outputs = pipe(
+                temp_file_path,
+                chunk_length_s=30,
+                batch_size=8,  # Further reduced batch size for memory efficiency
+                generate_kwargs=generate_kwargs,
+                return_timestamps=True,
+            )
+
+            # Clear cache after processing
+            torch.cuda.empty_cache()
+
+            # Return in OpenAI-compatible format
+            return {
+                "text": outputs["text"]
+            }
+
+        finally:
+            # Clean up temporary file
+            if os.path.exists(temp_file_path):
+                os.remove(temp_file_path)
+
+    except Exception as e:
+        print(f"Transcription error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

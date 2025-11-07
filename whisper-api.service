@@ -1,0 +1,17 @@
+[Unit]
+Description=Insanely Fast Whisper API (GPU 2, 15% Memory)
+After=network.target
+
+[Service]
+Type=simple
+User=op
+WorkingDirectory=/home/op/CascadeProjects/insanely-fast-whisper-api
+Environment="PATH=/home/op/miniconda3/envs/whisper-api/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="CUDA_VISIBLE_DEVICES=2"
+Environment="PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True"
+ExecStart=/home/op/miniconda3/envs/whisper-api/bin/uvicorn app.app:app --host 0.0.0.0 --port 8002
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
