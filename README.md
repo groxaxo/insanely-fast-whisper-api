@@ -91,9 +91,11 @@ docker pull yoeven/insanely-fast-whisper-api:latest
 # Run the container
 docker run -d \
   --gpus all \
-  -p 8000:8000 \
+  -p 8000:9000 \
   yoeven/insanely-fast-whisper-api:latest
 ```
+
+> **Note:** The container runs on port 9000 internally, mapped to port 8000 on the host.
 
 ### Option 2: Local Installation
 
@@ -129,6 +131,8 @@ poetry run uvicorn app.app:app --reload
 ---
 
 ## 🔌 API Usage
+
+> **Default Port:** The API runs on port `8000` (local) or `9000` (Docker internal). Adjust the port in the examples below if needed.
 
 ### Transcribe Audio
 
