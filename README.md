@@ -1,32 +1,108 @@
-# Insanely Fast Whisper API - Production Ready
+```
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║   ██╗███╗   ██╗███████╗ █████╗ ███╗   ██╗███████╗██╗  ██╗   ██╗          ║
+║   ██║████╗  ██║██╔════╝██╔══██╗████╗  ██║██╔════╝██║  ╚██╗ ██╔╝          ║
+║   ██║██╔██╗ ██║███████╗███████║██╔██╗ ██║█████╗  ██║   ╚████╔╝           ║
+║   ██║██║╚██╗██║╚════██║██╔══██║██║╚██╗██║██╔══╝  ██║    ╚██╔╝            ║
+║   ██║██║ ╚████║███████║██║  ██║██║ ╚████║███████╗███████╗██║             ║
+║   ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝             ║
+║                                                                           ║
+║              ███████╗ █████╗ ███████╗████████╗                           ║
+║              ██╔════╝██╔══██╗██╔════╝╚══██╔══╝                           ║
+║              █████╗  ███████║███████╗   ██║                              ║
+║              ██╔══╝  ██╔══██║╚════██║   ██║                              ║
+║              ██║     ██║  ██║███████║   ██║                              ║
+║              ╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝                              ║
+║                                                                           ║
+║                    WHISPER API - BLAZING FAST                            ║
+║                  OpenAI-Compatible Speech-to-Text                        ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+```
 
-[![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%203090-green)](https://www.nvidia.com/)
-[![Model](https://img.shields.io/badge/Model-Whisper%20Large%20V3%20Turbo-blue)](https://huggingface.co/openai/whisper-large-v3-turbo)
-[![Memory](https://img.shields.io/badge/Memory-15%25%20GPU-orange)](https://github.com/groxaxo/insanely-fast-whisper-api)
+<div align="center">
 
-OpenAI-compatible Whisper API optimized for GPU 2 with 15% memory limit. Features auto language detection, Flash Attention 2.0, and seamless Open WebUI integration.
+[![GPU](https://img.shields.io/badge/GPU-NVIDIA%20Compatible-76B900?style=for-the-badge&logo=nvidia)](https://www.nvidia.com/)
+[![Model](https://img.shields.io/badge/Model-Whisper%20Large%20V3%20Turbo-412991?style=for-the-badge&logo=openai)](https://huggingface.co/openai/whisper-large-v3-turbo)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-## ✨ Features
+**Transcribe audio to text at blazing fast speeds with OpenAI's Whisper Large V3 Turbo**
 
-- 🚀 **Whisper Large V3 Turbo** - 2x faster than regular v3, same accuracy
-- 🌍 **Auto Language Detection** - 99+ languages supported
-- ⚡ **Flash Attention 2.0** - Optimized GPU inference
-- 🎯 **OpenAI Compatible** - Drop-in replacement for OpenAI Whisper API
-- 💾 **Memory Efficient** - Limited to 15% of GPU 2 (3.53 GB)
-- 🔄 **Auto-restart** - Systemd service with automatic recovery
-- 📊 **Production Tested** - Verified with Spanish and English audio
+[Features](#-features) • [Quick Start](#-quick-start) • [API Usage](#-api-usage) • [Deploy](#-deployment) • [Documentation](#-documentation)
 
-## 🚀 Quick Start
+</div>
 
-### 1. Clone and Setup
+---
+
+## 🚀 Features
+
+<table>
+<tr>
+<td width="50%">
+
+### ⚡ Performance
+- **2x Faster** than regular Whisper V3
+- **Flash Attention 2.0** optimization
+- **GPU-accelerated** inference
+- **Batch processing** for efficiency
+- **~2 min** for 150 min of audio (A100)
+
+</td>
+<td width="50%">
+
+### 🎯 Capabilities
+- **99+ Languages** auto-detection
+- **OpenAI Compatible** API
+- **Speaker Diarization** support
+- **Async Processing** with webhooks
+- **Docker Ready** for easy deployment
+
+</td>
+</tr>
+</table>
+
+### 🎤 Key Highlights
+
+```
+✅ Transcribe audio to text at blazing fast speeds
+✅ Fully open source and deployable on any GPU cloud provider
+✅ Built-in speaker diarization
+✅ Easy to use FastAPI layer
+✅ Async background tasks and webhooks
+✅ Optimized for concurrency and parallel processing
+✅ Task management, cancel and status endpoints
+✅ Admin authentication for secure API access
+✅ Fully managed API available on JigsawStack
+```
+
+---
+
+## 📋 Quick Start
+
+### Option 1: Docker (Recommended)
 
 ```bash
+# Pull the latest image
+docker pull yoeven/insanely-fast-whisper-api:latest
+
+# Run the container
+docker run -d \
+  --gpus all \
+  -p 8000:9000 \
+  yoeven/insanely-fast-whisper-api:latest
+```
+
+> **Note:** The container runs on port 9000 internally, mapped to port 8000 on the host.
+
+### Option 2: Local Installation
+
+```bash
+# Clone the repository
 git clone https://github.com/groxaxo/insanely-fast-whisper-api.git
 cd insanely-fast-whisper-api
-
-# Create conda environment
-conda create -n whisper-api python=3.10 -y
-conda activate whisper-api
 
 # Install PyTorch with CUDA
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
@@ -37,436 +113,419 @@ pip install flash-attn==2.5.6 --no-build-isolation
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Run the API
+uvicorn app.app:app --host 0.0.0.0 --port 8000
 ```
 
-### 2. Start the API
+### Option 3: Poetry (Development)
 
 ```bash
-./start_gpu2_limited.sh
+# Install dependencies
+poetry install
+
+# Run the API
+poetry run uvicorn app.app:app --reload
 ```
 
-The API will be available at `http://localhost:8002`
-
-### 3. Install as System Service (Optional)
-
-For automatic startup on boot:
-
-```bash
-./install_service.sh
-```
-
-## 📋 Configuration
-
-### GPU Settings
-- **Device**: GPU 2 (via `CUDA_VISIBLE_DEVICES=2`)
-- **Memory Limit**: 15% (3.53 GB on RTX 3090)
-- **Memory Management**: `expandable_segments:True`
-- **Batch Size**: 8 (optimized for memory efficiency)
-
-### Model Settings
-- **Model**: `openai/whisper-large-v3-turbo`
-- **Size**: 1.62 GB
-- **Precision**: FP16
-- **Optimization**: Flash Attention 2.0
-- **Chunk Length**: 30 seconds
+---
 
 ## 🔌 API Usage
 
-### OpenAI-Compatible Endpoint
+> **Default Port:** The API runs on port `8000` (local) or `9000` (Docker internal). Adjust the port in the examples below if needed.
+
+### Transcribe Audio
+
+**OpenAI-Compatible Endpoint:**
 
 ```bash
-curl -X POST http://localhost:8002/audio/transcriptions \
-  -F "file=@audio.mp3" \
-  -F "model=whisper-large-v3-turbo"
-```
-
-### With Language Specification
-
-```bash
-curl -X POST http://localhost:8002/audio/transcriptions \
+curl -X POST http://localhost:8000/audio/transcriptions \
   -F "file=@audio.mp3" \
   -F "model=whisper-large-v3-turbo" \
-  -F "language=es"
+  -F "language=en"
 ```
 
-### Response Format
-
+**Response:**
 ```json
 {
-  "text": "Transcribed text here..."
+  "text": "Your transcribed text here..."
 }
 ```
 
-## 🌐 Open WebUI Integration
-
-### Configuration
-
-Set these environment variables when starting Open WebUI:
+### Standard Endpoint
 
 ```bash
-STT_ENGINE=openai
-STT_OPENAI_API_BASE_URL=http://localhost:8002
-STT_OPENAI_API_KEY=dummy
-STT_MODEL=whisper-large-v3-turbo
+curl -X POST http://localhost:8000/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://example.com/audio.mp3",
+    "task": "transcribe",
+    "language": "en",
+    "batch_size": 64,
+    "timestamp": "chunk"
+  }'
 ```
 
-### Start Open WebUI
+**Response:**
+```json
+{
+  "output": {
+    "text": "Transcribed text...",
+    "chunks": [...]
+  },
+  "status": "completed",
+  "task_id": "uuid-here"
+}
+```
+
+### Async Processing with Webhook
 
 ```bash
-pkill -f "open-webui"
+curl -X POST http://localhost:8000/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://example.com/audio.mp3",
+    "task": "transcribe",
+    "is_async": true,
+    "webhook": {
+      "url": "https://your-webhook-url.com",
+      "header": {
+        "Authorization": "Bearer your-token"
+      }
+    }
+  }'
+```
 
-STT_ENGINE=openai \
-STT_OPENAI_API_BASE_URL=http://localhost:8002 \
-STT_OPENAI_API_KEY=dummy \
-STT_MODEL=whisper-large-v3-turbo \
+### Speaker Diarization
+
+```bash
+curl -X POST http://localhost:8000/ \
+  -H "Content-Type: application/json" \
+  -H "x-admin-api-key: your-admin-key" \
+  -d '{
+    "url": "https://example.com/audio.mp3",
+    "task": "transcribe",
+    "diarise_audio": true
+  }'
+```
+
+**Note:** Requires `HF_TOKEN` environment variable. See [setup instructions](#speaker-diarization-setup).
+
+---
+
+## 📡 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/` | Transcribe or translate audio |
+| `POST` | `/audio/transcriptions` | OpenAI-compatible transcription endpoint |
+| `GET` | `/tasks` | Get all active transcription tasks |
+| `GET` | `/status/{task_id}` | Get the status of a task |
+| `DELETE` | `/cancel/{task_id}` | Cancel async background task |
+
+### Request Parameters
+
+#### POST `/` - Standard Endpoint
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `url` | string | **required** | URL of audio file |
+| `task` | string | `transcribe` | `transcribe` or `translate` |
+| `language` | string | `None` | Language code (e.g., `en`, `es`) or `None` for auto-detect |
+| `batch_size` | integer | `64` | Batch size for processing |
+| `timestamp` | string | `chunk` | `chunk` or `word` |
+| `diarise_audio` | boolean | `false` | Enable speaker diarization |
+| `webhook` | object | `null` | Webhook configuration |
+| `is_async` | boolean | `false` | Run as background task |
+| `managed_task_id` | string | `null` | Custom task ID |
+
+#### POST `/audio/transcriptions` - OpenAI-Compatible
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `file` | file | **required** | Audio file to transcribe |
+| `model` | string | `whisper-large-v3-turbo` | Model name |
+| `language` | string | `null` | Language code (optional) |
+| `response_format` | string | `json` | Response format |
+
+---
+
+## 🔐 Authentication
+
+If you set the `ADMIN_KEY` environment variable, all requests must include the `x-admin-api-key` header:
+
+```bash
+curl -X POST http://localhost:8000/ \
+  -H "x-admin-api-key: your-admin-key" \
+  -H "Content-Type: application/json" \
+  -d '{ ... }'
+```
+
+---
+
+## 🌐 Open WebUI Integration
+
+Configure Open WebUI to use this API for speech-to-text:
+
+```bash
+# Environment variables
+export STT_ENGINE=openai
+export STT_OPENAI_API_BASE_URL=http://localhost:8000
+export STT_OPENAI_API_KEY=dummy
+export STT_MODEL=whisper-large-v3-turbo
+
+# Start Open WebUI
 open-webui serve
 ```
 
-### Docker Configuration
+### Docker Compose
 
 ```yaml
 services:
   open-webui:
     environment:
       - STT_ENGINE=openai
-      - STT_OPENAI_API_BASE_URL=http://host.docker.internal:8002
+      - STT_OPENAI_API_BASE_URL=http://host.docker.internal:8000
       - STT_OPENAI_API_KEY=dummy
       - STT_MODEL=whisper-large-v3-turbo
 ```
 
-## 🧪 Testing
+---
 
-### Run Accuracy Tests
+## ☁️ Deployment
 
-```bash
-python3 test_accuracy.py
-```
-
-### Test Endpoint
+### Fly.io (GPU)
 
 ```bash
-./test_openwebui_endpoint.sh
+# Install Fly CLI
+curl -L https://fly.io/install.sh | sh
+
+# Launch the app
+fly launch
+
+# Set secrets (optional)
+fly secrets set ADMIN_KEY=your-token HF_TOKEN=your-hf-token
+
+# Deploy
+fly deploy
 ```
 
-### Test Results
+Your API will be available at: `https://your-app-name.fly.dev`
 
-- ✅ **Success Rate**: 80% (4/5 files, 1 corrupted)
-- ✅ **Avg Processing Time**: 0.98 seconds
-- ✅ **Languages**: Spanish, English (auto-detected)
-- ✅ **Transcription Quality**: Excellent
+### Other Cloud Providers
 
-See [TEST_RESULTS_SUMMARY.md](TEST_RESULTS_SUMMARY.md) for detailed results.
+This is a standard Docker application that can be deployed on:
+- **AWS** (EC2 with GPU)
+- **GCP** (Compute Engine with GPU)
+- **Azure** (GPU VMs)
+- **RunPod** (GPU instances)
+- **Vast.ai** (GPU rentals)
 
-## 🔧 System Service Management
+---
 
-### Install Service
+## ⚙️ Configuration
 
-```bash
-./install_service.sh
+### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ADMIN_KEY` | No | API admin key for authentication |
+| `HF_TOKEN` | No* | Hugging Face token for speaker diarization |
+
+*Required only if using speaker diarization
+
+### GPU Memory Configuration
+
+For custom GPU memory limits, modify `app/app.py`:
+
+```python
+# Set memory fraction (e.g., 0.15 = 15%)
+torch.cuda.set_per_process_memory_fraction(0.15, device=0)
 ```
 
-### Service Commands
+### Model Configuration
 
-```bash
-# Check status
-sudo systemctl status whisper-api
+The API uses **Whisper Large V3 Turbo** by default. To use a different model, modify `app/app.py`:
 
-# Start/Stop/Restart
-sudo systemctl start whisper-api
-sudo systemctl stop whisper-api
-sudo systemctl restart whisper-api
-
-# View logs
-sudo journalctl -u whisper-api -f
-
-# Disable autostart
-sudo systemctl disable whisper-api
+```python
+pipe = pipeline(
+    "automatic-speech-recognition",
+    model="openai/whisper-large-v3",  # Change model here
+    torch_dtype=torch.float16,
+    device="cuda:0",
+    model_kwargs={"attn_implementation": "flash_attention_2"},
+)
 ```
 
-## 📊 Performance
+### Speaker Diarization Setup
 
-| Metric | Value |
-|--------|-------|
-| Model Size | 1.62 GB |
-| GPU Memory | 3.53 GB (15% of RTX 3090) |
-| Avg Processing Time | ~1 second |
-| Processing Speed | 0.57 - 2.95 MB/s |
-| Languages Supported | 99+ |
-| Batch Size | 8 |
+To enable speaker diarization:
 
-## 🗂️ Project Structure
+1. Accept user conditions:
+   - [`pyannote/segmentation-3.0`](https://hf.co/pyannote/segmentation-3.0)
+   - [`pyannote/speaker-diarization-3.1`](https://hf.co/pyannote/speaker-diarization-3.1)
 
-```
-insanely-fast-whisper-api/
-├── app/
-│   ├── app.py                      # Main API (modified with OpenAI endpoint)
-│   ├── diarization_pipeline.py
-│   └── diarize.py
-├── start_gpu2_limited.sh           # Startup script
-├── whisper-api.service             # Systemd service file
-├── install_service.sh              # Service installation script
-├── test_accuracy.py                # Accuracy testing script
-├── test_openwebui_endpoint.sh      # Endpoint testing script
-├── configure_openwebui.sh          # Open WebUI configuration helper
-├── README.md                       # This file
-├── SETUP_SUMMARY.md                # Initial setup guide
-├── OPEN_WEBUI_INTEGRATION.md       # Integration guide
-├── TEST_RESULTS_SUMMARY.md         # Test results
-├── README_COMPLETE.md              # Complete documentation
-├── requirements.txt
-└── pyproject.toml
-```
+2. Create access token at [`hf.co/settings/tokens`](https://hf.co/settings/tokens)
+
+3. Set environment variable:
+   ```bash
+   export HF_TOKEN=your-token-here
+   ```
+
+---
+
+## 📊 Performance Benchmarks
+
+**Test Environment:** NVIDIA A100 80GB
+
+| Optimization | Time for 150 min audio |
+|--------------|------------------------|
+| Large V3 Turbo + FP16 + Batch[24] + Flash Attn 2 | **~2 min (1:38)** |
+| + Speaker Diarization | **~2 min (3:16)** |
+| + Fly.io machine startup | **~2 min (1:58)** |
+| + Diarization + Startup | **~2 min (3:36)** |
+
+**Model Comparison:**
+
+| Feature | Whisper V3 | Whisper V3 Turbo |
+|---------|------------|------------------|
+| Model Size | 3 GB | 1.62 GB |
+| Speed | 1x | **2x faster** |
+| Accuracy | Excellent | Excellent |
+| Memory Usage | Higher | **Lower** |
+| Languages | 99+ | 99+ |
+
+---
 
 ## 🛠️ Troubleshooting
 
 ### API Not Starting
 
 ```bash
-# Check if port 8002 is free
-ss -tlnp | grep :8002
+# Check if port is in use
+lsof -i :8000
 
 # Kill existing process
 pkill -f "uvicorn app.app:app"
 
 # Restart
-./start_gpu2_limited.sh
+uvicorn app.app:app --host 0.0.0.0 --port 8000
 ```
 
 ### Out of Memory Errors
 
-The API is configured for 15% memory usage. If you experience OOM errors:
+- Reduce `batch_size` in the request
+- Use a smaller model (e.g., `whisper-medium`)
+- Increase GPU memory allocation
+- Use Whisper V3 Turbo instead of regular V3
 
-1. Check GPU memory: `nvidia-smi`
-2. Ensure no other processes are using GPU 2
-3. The Turbo model + 15% limit should work fine
-
-### Transcription Errors
+### CUDA Not Available
 
 ```bash
-# Check API logs
-sudo journalctl -u whisper-api -f
+# Check CUDA installation
+python -c "import torch; print(torch.cuda.is_available())"
 
-# Or if running manually, check the terminal output
+# Verify GPU
+nvidia-smi
+
+# Reinstall PyTorch with CUDA
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
-### Open WebUI Connection Issues
+### Connection Errors
 
-1. Verify API is running: `curl http://localhost:8002/`
-2. Check Open WebUI environment variables
-3. If using Docker, use `http://host.docker.internal:8002`
-
-## 📝 Documentation
-
-- [SETUP_SUMMARY.md](SETUP_SUMMARY.md) - Initial setup guide
-- [OPEN_WEBUI_INTEGRATION.md](OPEN_WEBUI_INTEGRATION.md) - Open WebUI integration
-- [TEST_RESULTS_SUMMARY.md](TEST_RESULTS_SUMMARY.md) - Test results and accuracy
-- [README_COMPLETE.md](README_COMPLETE.md) - Complete documentation
-
-## 🤝 Contributing
-
-This is a production-optimized fork with:
-- OpenAI-compatible endpoint for Open WebUI
-- GPU 2 configuration with 15% memory limit
-- Whisper Large V3 Turbo model
-- Systemd service for autostart
-- Comprehensive testing and documentation
-
-## 📄 License
-
-Same as the original [insanely-fast-whisper-api](https://github.com/groxaxo/insanely-fast-whisper-api)
-
-## 🙏 Credits
-
-Based on [insanely-fast-whisper-api](https://github.com/groxaxo/insanely-fast-whisper-api)
-
-## 📞 Support
-
-For issues or questions:
-1. Check the troubleshooting section above
-2. Review the documentation files
-3. Check GPU status: `nvidia-smi`
-4. View logs: `sudo journalctl -u whisper-api -f`
+- Verify API is running: `curl http://localhost:8000/`
+- Check firewall settings
+- For Docker: Use `host.docker.internal` instead of `localhost`
 
 ---
 
-**Status**: ✅ Production Ready  
-**Last Updated**: 2025-11-07  
-**Model**: Whisper Large V3 Turbo  
-**GPU**: NVIDIA GeForce RTX 3090 (GPU 2, 15% memory)
-An API to transcribe audio with [OpenAI's Whisper Large v3](https://huggingface.co/openai/whisper-large-v3)! Powered by 🤗 Transformers, Optimum & flash-attn
-
-Features:
-* 🎤 Transcribe audio to text at blazing fast speeds
-* 📖 Fully open source and deployable on any GPU cloud provider
-* 🗣️ Built-in speaker diarization
-* ⚡ Easy to use and Fast API layer
-* 📃 Async background tasks and webhooks
-* 🔥 Optimized for concurrency and parallel processing
-* ✅ Task management, cancel and status endpoints
-* 🔒 Admin authentication for secure API access
-* 🧩 Fully managed API available on [JigsawStack](https://jigsawstack.com/speech-to-text)
-
-Based on [Insanely Fast Whisper CLI](https://github.com/Vaibhavs10/insanely-fast-whisper) project. Check it out if you like to set up this project locally or understand the background of insanely-fast-whisper.
-
-This project is focused on providing a deployable blazing fast whisper API with docker on cloud infrastructure with GPUs for scalable production use cases.
-
-With [Fly.io recent GPU service launch](https://fly.io/docs/gpus/gpu-quickstart/), I've set up the fly config file to easily deploy on fly machines! However, you can deploy this on any other VM environment that supports GPUs and docker.
-
-
-Here are some benchmarks we ran on Nvidia A100 - 80GB and fly.io GPU infra👇
-| Optimization type    | Time to Transcribe (150 mins of Audio) |
-|------------------|------------------|
-| **large-v3 (Transformers) (`fp16` + `batching [24]` + `Flash Attention 2`)** | **~2 (*1 min 38 sec*)**            |
-| **large-v3 (Transformers) (`fp16` + `batching [24]` + `Flash Attention 2` + `diarization`)** | **~2 (*3 min 16 sec*)**            |
-| **large-v3 (Transformers) (`fp16` + `batching [24]` + `Flash Attention 2` + `fly machine startup`)** | **~2 (*1 min 58 sec*)**            |
-| **large-v3 (Transformers) (`fp16` + `batching [24]` + `Flash Attention 2` + `diarization + fly machine startup`)** | **~2 (*3 min 36 sec*)**|
-
-The estimated startup time for the Fly machine with GPU and loading up the model is around ~20 seconds. The rest of the time is spent on the actual computation.
-
-## Docker image
-```
-yoeven/insanely-fast-whisper-api:latest
-```
-Docker hub: [yoeven/insanely-fast-whisper-api](https://hub.docker.com/r/yoeven/insanely-fast-whisper-api)
-
-## Deploying to Fly
-- Make sure you already have access to Fly GPUs.
-- Clone the project locally and open a terminal in the root
-- Rename the `app` name in the `fly.toml` if you like
-- Remove `image = 'yoeven/insanely-fast-whisper-api:latest'` in `fly.toml` only if you want to rebuild the image from the `Dockerfile`
-
-[Install fly cli](https://fly.io/docs/hands-on/install-flyctl/) if don't already have it
-
-Only need to run this the first time you launch a new fly app
-```bash
-fly launch
-```
-
-- Fly will prompt: `Would you like to copy its configuration to the new app? (y/N)`. Yes (`y`) to copy configuration from the repo.
-
-- Fly will prompt: `Do you want to tweak these settings before proceeding` if you have nothing to adjust. Most of the required settings are already configured in the `fly.toml` file. No `n` to proceed and deploy.
-
-The first time you deploy it will take some time since the image is huge. Subsequent deploys will be a lot faster.
-
-Run the following if you want to set up speaker diarization or an auth token to secure your API:
-
-```bash
-fly secrets set ADMIN_KEY=<your_token> HF_TOKEN=<your_hf_key>
-```
-Run `fly secrets list` to check if the secrets exist.
-
-To get the Hugging face token for speaker diarization you need to do the following:
-1. Accept [`pyannote/segmentation-3.0`](https://hf.co/pyannote/segmentation-3.0) user conditions
-2. Accept [`pyannote/speaker-diarization-3.1`](https://hf.co/pyannote/speaker-diarization-3.1) user conditions
-3. Create an access token at [`hf.co/settings/tokens`](https://hf.co/settings/tokens).
-
-
-Your API should look something like this:
+## 📁 Project Structure
 
 ```
-https://insanely-fast-whisper-api.fly.dev
+insanely-fast-whisper-api/
+├── app/
+│   ├── app.py                    # Main FastAPI application
+│   ├── diarization_pipeline.py   # Diarization logic
+│   └── diarize.py                # Diarization utilities
+├── Dockerfile                    # Docker configuration
+├── fly.toml                      # Fly.io configuration
+├── pyproject.toml                # Poetry dependencies
+├── requirements.txt              # Pip dependencies
+├── LICENSE                       # MIT License
+└── README.md                     # This file
 ```
 
-Run `fly logs -a insanely-fast-whisper-api` to view logs in real time of your fly machine.
+---
 
-## Deploying to other cloud providers
-Since this is a dockerized app, you can deploy it to any cloud provider that supports docker and GPUs with a few config tweaks.
+## 🌟 Use Cases
 
-## Fully managed and scalable API 
-[JigsawStack](https://jigsawstack.com) provides a bunch of powerful APIs for various use cases while keeping costs low. This project is available as a fully managed API [here](https://jigsawstack.com/speech-to-text) with enhanced cloud scalability for cost efficiency and high uptime. Sign up [here](https://jigsawstack.com) for free!
+- **Podcast Transcription** - Convert episodes to searchable text
+- **Meeting Notes** - Transcribe calls and meetings
+- **Content Creation** - Generate subtitles for videos
+- **Accessibility** - Add captions to media
+- **Voice Assistants** - Process voice commands
+- **Research** - Analyze audio interviews
+- **Education** - Transcribe lectures and courses
 
+---
 
-## API usage
+## 🤝 Contributing
 
-### Authentication
-If you had set up the `ADMIN_KEY` environment secret. You'll need to pass `x-admin-api-key` in the header with the value of the key you previously set.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Endpoints
-#### Base URL
-If deployed on Fly, the base URL should look something like this:
-```
-https://{app_name}.fly.dev/{path}
-```
-Depending on the cloud provider you deploy to, the base URL will be different.
+---
 
-#### **POST** `/`
-Transcribe or translate audio into text
-##### Body params (JSON)
-| Name    | value |
-|------------------|------------------|
-| url (Required) |  url of audio |
-| task | `transcribe`, `translate`  default: `transcribe` |
-| language | `None`, `en`, [other languages](https://huggingface.co/openai/whisper-large-v3) default: `None` Auto detects language
-| batch_size | Number of parallel batches you want to compute. Reduce if you face OOMs. default: `64` |
-| timestamp | `chunk`, `word`  default: `chunk` |
-| diarise_audio | Diarise the audio clips by speaker. You will need to set hf_token. default:`false` |
-| webhook | Webhook `POST` call on completion or error. default: `None` |
-| webhook.url | URL to send the webhook |
-| webhook.header | Headers to send with the webhook |
-| is_async | Run task in background and sends results to webhook URL. `true`, `false` default: `false` |
-| managed_task_id | Custom Task ID used to reference ongoing task. default: `uuid() v4 will be generated for each transcription task` |
+## 📄 License
 
-#### **GET** `/tasks`
-Get all active transcription tasks, both async background tasks and ongoing tasks
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-#### **GET** `/status/{task_id}`
-Get the status of a task, completed tasks will be removed from the list which may throw an error
+---
 
-#### **DELETE** `/cancel/{task_id}`
-Cancel async background task. Only transcription jobs created with `is_async` set to `true` can be cancelled.
+## 🙏 Acknowledgements
 
+- [Vaibhav Srivastav](https://github.com/Vaibhavs10) - Original [Insanely Fast Whisper CLI](https://github.com/Vaibhavs10/insanely-fast-whisper)
+- [OpenAI](https://openai.com/) - Whisper model
+- [Hugging Face](https://huggingface.co/) - Transformers library
+- [FastAPI](https://fastapi.tiangolo.com/) - Web framework
 
-## Running locally
-```bash
-# clone the repo
-$ git clone https://github.com/jigsawstack/insanely-fast-whisper-api.git
+---
 
-# change the working directory
-$ cd insanely-fast-whisper-api
+## 🔗 Links
 
-# install torch
-$ pip3 install torch torchvision torchaudio
+- **GitHub Repository:** [groxaxo/insanely-fast-whisper-api](https://github.com/groxaxo/insanely-fast-whisper-api)
+- **Docker Hub:** [yoeven/insanely-fast-whisper-api](https://hub.docker.com/r/yoeven/insanely-fast-whisper-api)
+- **Original CLI:** [Vaibhavs10/insanely-fast-whisper](https://github.com/Vaibhavs10/insanely-fast-whisper)
+- **Fully Managed API:** [JigsawStack Speech-to-Text](https://jigsawstack.com/speech-to-text)
 
-# upgrade wheel and install required packages for FlashAttention
-$ pip3 install -U wheel && pip install ninja packaging
+---
 
-# install FlashAttention
-$ pip3 install flash-attn --no-build-isolation
+## 💼 Fully Managed API
 
-# generate updated requirements.txt if you want to use other management tools (Optional)
-$ poetry export --output requirements.txt
+Don't want to manage infrastructure? [JigsawStack](https://jigsawstack.com) provides a fully managed, scalable API with:
 
-# get the path of python
-$ which python3
+- ✅ **No Infrastructure** - We handle everything
+- ✅ **Auto-scaling** - Pay per use
+- ✅ **99.9% Uptime** - Production-ready
+- ✅ **Global CDN** - Low latency worldwide
+- ✅ **Free Tier** - Get started for free
 
-# setup virtual environment 
-$ poetry env use /full/path/to/python
+**Sign up:** [jigsawstack.com](https://jigsawstack.com)
 
-# install the requirements
-$ poetry install
+---
 
-# run the app
-$ uvicorn app.app:app --reload
-```
+<div align="center">
 
-## Extra
-### Shutting down fly machine programmatically
-Fly machines are charged by the second and might take up to 15mins of idling before it decides to shut it self down. You can shut down the machine when you're done with the API to save costs. You can do this by sending a `POST` request to the following endpoint:
-```
-https://api.machines.dev/v1/apps/<app_name>/machines/<machine_id>/stop
-```
-Authorization header:
-```
-Authorization Bearer <fly_token>
-```
-Lear more [here](https://fly.io/docs/machines/api/machines-resource/)
+**Made with ❤️ by the community**
 
-## Acknowledgements
+⭐ Star us on GitHub — it motivates us a lot!
 
-1. [Vaibhav Srivastav](https://github.com/Vaibhavs10) for writing a huge chunk of the code and the CLI version of this project.
-2. [OpenAI Whisper](https://huggingface.co/openai/whisper-large-v3) 
+[Report Bug](https://github.com/groxaxo/insanely-fast-whisper-api/issues) · [Request Feature](https://github.com/groxaxo/insanely-fast-whisper-api/issues)
 
-
-## JigsawStack
-This project is part of [JigsawStack](https://jigsawstack.com) - A suite of powerful and developer friendly APIs for various use cases while keeping costs low. Sign up [here](https://jigsawstack.com) for free!
+</div>
