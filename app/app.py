@@ -2,10 +2,8 @@ import os
 import tempfile
 from fastapi import (
     FastAPI,
-    Header,
     HTTPException,
     Body,
-    BackgroundTasks,
     Request,
     File,
     UploadFile,
@@ -21,28 +19,21 @@ import asyncio
 import uuid
 
 
-admin_key = os.environ.get(
-    "ADMIN_KEY",
-)
+# Environment variables
+admin_key = os.environ.get("ADMIN_KEY")
+hf_token = os.environ.get("HF_TOKEN")
 
-hf_token = os.environ.get(
-    "HF_TOKEN",
-)
+# Fly.io runtime environment variable
+# https://fly.io/docs/machines/runtime-environment
+fly_machine_id = os.environ.get("FLY_MACHINE_ID")
 
-# fly runtime env https://fly.io/docs/machines/runtime-environment
-fly_machine_id = os.environ.get(
-    "FLY_MACHINE_ID",
-)
-
-# Configure GPU memory limit (15% utilization)
-if torch.cuda.is_available():
-    # Set memory fraction to 0.15 (15%)
-    torch.cuda.set_per_process_memory_fraction(0.15, device=0)
-    # Enable memory growth to avoid fragmentation
-    torch.cuda.empty_cache()
-    print(f"GPU Memory limited to 15% on device: {torch.cuda.get_device_name(0)}")
-    print(f"Total GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
-    print(f"Allocated limit: {torch.cuda.get_device_properties(0).total_memory * 0.15 / 1024**3:.2f} GB")
+# Optional: Configure GPU memory limit
+# Uncomment and adjust the fraction (e.g., 0.15 = 15%) to limit GPU memory usage
+# if torch.cuda.is_available():
+#     torch.cuda.set_per_process_memory_fraction(0.5, device=0)
+#     torch.cuda.empty_cache()
+#     print(f"GPU: {torch.cuda.get_device_name(0)}")
+#     print(f"Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
 
 pipe = pipeline(
     "automatic-speech-recognition",
@@ -238,7 +229,7 @@ def cancel(task_id: str):
 
     task = running_tasks[task_id]
     if task is None:
-        return HTTPException(status_code=400, detail="Not a background task")
+        raise HTTPException(status_code=400, detail="Not a background task")
     elif task.done() is False:
         task.cancel()
         del running_tasks[task_id]
@@ -267,8 +258,9 @@ async def transcribe_audio(
             temp_file_path = temp_file.name
 
         try:
-            # Clear GPU cache before processing
-            torch.cuda.empty_cache()
+            # Clear GPU cache before processing (if CUDA is available)
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
             
             # Process the audio file
             generate_kwargs = {
@@ -279,13 +271,14 @@ async def transcribe_audio(
             outputs = pipe(
                 temp_file_path,
                 chunk_length_s=30,
-                batch_size=8,  # Further reduced batch size for memory efficiency
+                batch_size=8,
                 generate_kwargs=generate_kwargs,
                 return_timestamps=True,
             )
 
             # Clear cache after processing
-            torch.cuda.empty_cache()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
             # Return in OpenAI-compatible format
             return {
