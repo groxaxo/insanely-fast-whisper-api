@@ -25,7 +25,7 @@
 
 [![GPU](https://img.shields.io/badge/GPU-NVIDIA%20Compatible-76B900?style=for-the-badge&logo=nvidia)](https://www.nvidia.com/)
 [![Model](https://img.shields.io/badge/Model-Whisper%20Large%20V3%20Turbo-412991?style=for-the-badge&logo=openai)](https://huggingface.co/openai/whisper-large-v3-turbo)
-[![Model](https://img.shields.io/badge/Model-NVIDIA%20Parakeet%200.6B-76B900?style=for-the-badge&logo=nvidia)](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3)
+[![Model](https://img.shields.io/badge/Model-NVIDIA%20Parakeet%20TDT%200.6B-76B900?style=for-the-badge&logo=nvidia)](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
@@ -359,8 +359,8 @@ To change models, modify `app/app.py`:
 pipe = pipeline(
     "automatic-speech-recognition",
     model="openai/whisper-large-v3-turbo",  # Default - fast and accurate
-    # model="openai/whisper-large-v3",     # More accurate, slower
-    # model="openai/whisper-medium",       # Smaller, faster
+    # model="openai/whisper-large-v3",     # Larger model, slower
+    # model="openai/whisper-medium",       # Smaller model, faster
     torch_dtype=torch.float16,
     device="cuda:0",
     model_kwargs={"attn_implementation": "flash_attention_2"},
