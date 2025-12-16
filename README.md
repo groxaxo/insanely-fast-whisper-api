@@ -25,11 +25,12 @@
 
 [![GPU](https://img.shields.io/badge/GPU-NVIDIA%20Compatible-76B900?style=for-the-badge&logo=nvidia)](https://www.nvidia.com/)
 [![Model](https://img.shields.io/badge/Model-Whisper%20Large%20V3%20Turbo-412991?style=for-the-badge&logo=openai)](https://huggingface.co/openai/whisper-large-v3-turbo)
+[![Model](https://img.shields.io/badge/Model-NVIDIA%20Parakeet%20TDT%200.6B-76B900?style=for-the-badge&logo=nvidia)](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
-**Transcribe audio to text at blazing fast speeds with OpenAI's Whisper Large V3 Turbo**
+**Transcribe audio to text at blazing fast speeds with multiple state-of-the-art models**
 
 [Features](#-features) • [Quick Start](#-quick-start) • [API Usage](#-api-usage) • [Deploy](#-deployment) • [Documentation](#-documentation)
 
@@ -345,17 +346,52 @@ torch.cuda.set_per_process_memory_fraction(0.15, device=0)
 
 ### Model Configuration
 
-The API uses **Whisper Large V3 Turbo** by default. To use a different model, modify `app/app.py`:
+The API supports multiple speech recognition models. Choose based on your needs:
+
+**Default: Whisper Large V3 Turbo** - Best for multilingual transcription
+**Alternative: NVIDIA Parakeet TDT 0.6B v3** - Best for fast English-only transcription
+
+To change models, modify `app/app.py`:
+
+#### Option 1: OpenAI Whisper Models
 
 ```python
 pipe = pipeline(
     "automatic-speech-recognition",
-    model="openai/whisper-large-v3",  # Change model here
+    model="openai/whisper-large-v3-turbo",  # Default - fast and accurate
+    # model="openai/whisper-large-v3",     # Larger model, slower
+    # model="openai/whisper-medium",       # Smaller model, faster
     torch_dtype=torch.float16,
     device="cuda:0",
     model_kwargs={"attn_implementation": "flash_attention_2"},
 )
 ```
+
+#### Option 2: NVIDIA Parakeet TDT 0.6B v3
+
+[NVIDIA Parakeet TDT 0.6B v3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3) is a lightweight, fast model optimized for English transcription:
+
+```python
+pipe = pipeline(
+    "automatic-speech-recognition",
+    model="nvidia/parakeet-tdt-0.6b-v3",
+    torch_dtype=torch.float16,
+    device="cuda:0",
+)
+```
+
+**Parakeet Features:**
+- **Extremely lightweight** - Only 0.6B parameters (~1.2GB)
+- **Fast inference** - Up to 4x faster than Whisper models
+- **Optimized for English** - State-of-the-art English ASR performance
+- **Lower memory usage** - Ideal for smaller GPUs
+- **Time-domain Transformer (TDT)** architecture for efficiency
+
+**When to use Parakeet:**
+- English-only transcription needs
+- Resource-constrained environments (smaller GPUs)
+- Real-time or low-latency requirements
+- High-volume processing where speed is critical
 
 ### Speaker Diarization Setup
 
@@ -387,13 +423,14 @@ To enable speaker diarization:
 
 **Model Comparison:**
 
-| Feature | Whisper V3 | Whisper V3 Turbo |
-|---------|------------|------------------|
-| Model Size | 3 GB | 1.62 GB |
-| Speed | 1x | **2x faster** |
-| Accuracy | Excellent | Excellent |
-| Memory Usage | Higher | **Lower** |
-| Languages | 99+ | 99+ |
+| Feature | Whisper V3 | Whisper V3 Turbo | NVIDIA Parakeet 0.6B |
+|---------|------------|------------------|----------------------|
+| Model Size | 3 GB | 1.62 GB | **1.2 GB** |
+| Speed | 1x | 2x faster | **4x faster** |
+| Accuracy | Excellent | Excellent | Excellent (English) |
+| Memory Usage | Higher | Lower | **Lowest** |
+| Languages | 99+ | 99+ | English only |
+| Best For | Multilingual | Fast multilingual | **Fast English-only** |
 
 ---
 
@@ -492,6 +529,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Vaibhav Srivastav](https://github.com/Vaibhavs10) - Original [Insanely Fast Whisper CLI](https://github.com/Vaibhavs10/insanely-fast-whisper)
 - [OpenAI](https://openai.com/) - Whisper model
+- [NVIDIA](https://www.nvidia.com/) - Parakeet TDT model
 - [Hugging Face](https://huggingface.co/) - Transformers library
 - [FastAPI](https://fastapi.tiangolo.com/) - Web framework
 
